@@ -181,6 +181,12 @@ Circos.propTypes = {
                     targetEnd: PropTypes.string.isRequired,
                     targetID: PropTypes.string,
                 }),
+                PropTypes.shape({
+                    chord: PropTypes.bool.isRequired,
+                    bidirectional: PropTypes.bool.isRequired,
+                    label: PropTypes.string.isRequired,
+                    displayValue: PropTypes.bool.isRequired,
+                }),
             ]),
             /**
              * Specify which dictonary key to grab color values from, in the passed in dataset.

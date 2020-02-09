@@ -194,7 +194,7 @@ def get_circos_graph(
             config={
                 'innerRadius': size / 2 - 80,
                 'outerRadius': size / 2 - 40,
-                'ticks': {'display': False, 'labelDenominator': 1000000},
+                'ticks': {'display': True, 'labelDenominator': 1000000},
                 'labels': {
                     'position': 'center',
                     'display': True,
@@ -223,13 +223,10 @@ def get_circos_graph(
                         'opacity': 0.7,
                         'color': {'name': 'color'},
                         'tooltipContent': {
-                            'source': 'source',
-                            'sourceID': 'id',
-                            'target': 'target',
-                            'targetID': 'id',
-                            'targetEnd': 'end',
-                            'sourceEnd': 'end',
-                            #'name': 'all'
+                            'chord': True,
+                            'bidirectional': True,
+                            'label': 'id',
+                            'displayValue': True
                         },
                     },
                 },
