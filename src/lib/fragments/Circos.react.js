@@ -23,7 +23,13 @@ export default class Circos extends Component {
         this.setStopScroll = this.setStopScroll.bind(this);
 
         this.formatChordToolTip = this.formatChordToolTip.bind(this);
-        this.generateHoverDataBlock = this.generateHoverDataBlock.bind(this);
+        this.formatHighlightToolTip = this.formatHighlightToolTip.bind(this);
+        this.generateChordHoverDataBlock = this.generateChordHoverDataBlock.bind(
+            this
+        );
+        this.generateHighlightHoverDataBlock = this.generateHighlightHoverDataBlock.bind(
+            this
+        );
     }
 
     stopScroll(e) {
@@ -107,36 +113,55 @@ export default class Circos extends Component {
         }
     }
 
-    generateHoverDataBlock(source, target, label, displayValue) {
+    generateChordHoverDataBlock(source, target, label, displayValue) {
         const final_val = displayValue ? source.value : source.end;
 
         return (
-            '<h3>' +
+            '<p>' +
             source[label] +
             ' ➤ ' +
             target[label] +
             ': ' +
             final_val +
-            '</h3>'
+            '</p>'
         );
+    }
+
+    generateHighlightHoverDataBlock(key, val) {
+        return '<p>' + key + ': ' + val + '</p>';
     }
 
     formatChordToolTip(bidirectional, label, displayValue) {
         return d => {
             // when bidirectional is false
-            let partialToolTip = this.generateHoverDataBlock(
+            let partialToolTip = this.generateChordHoverDataBlock(
                 d.source,
                 d.target,
                 label,
                 displayValue
             );
             if (bidirectional) {
-                partialToolTip += this.generateHoverDataBlock(
+                partialToolTip += this.generateChordHoverDataBlock(
                     d.target,
                     d.source,
                     label,
                     displayValue
                 );
+            }
+            return partialToolTip;
+        };
+    }
+
+    formatHighlightToolTip(values) {
+        return d => {
+            let partialToolTip = '';
+            if (values) {
+                for (const key in d.values) {
+                    partialToolTip += this.generateHighlightHoverDataBlock(
+                        key,
+                        d.values[key]
+                    );
+                }
             }
             return partialToolTip;
         };
@@ -209,6 +234,12 @@ export default class Circos extends Component {
                     tooltipData.bidirectional,
                     tooltipData.label,
                     tooltipData.displayValue
+                );
+            } else if (configApply.tooltipContent.highlight === true) {
+                const tooltipData = configApply.tooltipContent;
+
+                configApply.tooltipContent = this.formatHighlightToolTip(
+                    tooltipData.values
                 );
             }
         } else {

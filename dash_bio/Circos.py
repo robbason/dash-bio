@@ -85,7 +85,10 @@ Those keys have the following types:
   - chord (boolean; required)
   - bidirectional (boolean; required)
   - label (string; required)
-  - displayValue (boolean; required)
+  - displayValue (boolean; required) | dict containing keys 'highlight', 'values'.
+Those keys have the following types:
+  - highlight (boolean; required)
+  - values (boolean; required)
   - color (dict; optional): Specify which dictonary key to grab color values from, in the passed in dataset.
 This can be a string or an object.
 If using a string, you can specify hex,
