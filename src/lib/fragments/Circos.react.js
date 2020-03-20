@@ -117,18 +117,18 @@ export default class Circos extends Component {
         const final_val = displayValue ? source.value : source.end;
 
         return (
-            '<h3>' +
+            '<h6>' +
             source[label] +
             ' ➤ ' +
             target[label] +
             ': ' +
             final_val +
-            '</h3>'
+            '</h6>'
         );
     }
 
     generateHighlightHoverDataBlock(key, val) {
-        return '<h3>' + key + ': ' + val + '</h3>';
+        return '<h6>' + key + ': ' + val + '</h6>';
     }
 
     formatChordToolTip(bidirectional, label, displayValue) {
