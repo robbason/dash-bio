@@ -90,7 +90,10 @@ export default class Circos extends Component {
          * in the dataset provided, and apply them directly to the tracks/layout specified
          * by ID.
          */
-        if (typeof configApply.color !== 'undefined') {
+        if (
+            typeof configApply.color !== 'undefined' &&
+            typeof configApply.color !== 'function'
+        ) {
             if (typeof configApply.color.name !== 'undefined') {
                 var colorName = configApply.color.name;
                 configApply.color = d => d[colorName];
