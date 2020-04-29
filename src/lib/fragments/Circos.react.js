@@ -21,6 +21,15 @@ export default class Circos extends Component {
 
         this.stopScroll = this.stopScroll.bind(this);
         this.setStopScroll = this.setStopScroll.bind(this);
+
+        this.formatChordToolTip = this.formatChordToolTip.bind(this);
+        this.formatHighlightToolTip = this.formatHighlightToolTip.bind(this);
+        this.generateChordHoverDataBlock = this.generateChordHoverDataBlock.bind(
+            this
+        );
+        this.generateHighlightHoverDataBlock = this.generateHighlightHoverDataBlock.bind(
+            this
+        );
     }
 
     stopScroll(e) {
@@ -104,6 +113,60 @@ export default class Circos extends Component {
         }
     }
 
+    generateChordHoverDataBlock(source, target, label, displayValue) {
+        const final_val = displayValue ? source.value : source.end;
+
+        return (
+            '<h6>' +
+            source[label] +
+            ' ➤ ' +
+            target[label] +
+            ': ' +
+            final_val +
+            '</h6>'
+        );
+    }
+
+    generateHighlightHoverDataBlock(key, val) {
+        return '<h6>' + key + ': ' + val + '</h6>';
+    }
+
+    formatChordToolTip(bidirectional, label, displayValue) {
+        return d => {
+            // when bidirectional is false
+            let partialToolTip = this.generateChordHoverDataBlock(
+                d.source,
+                d.target,
+                label,
+                displayValue
+            );
+            if (bidirectional) {
+                partialToolTip += this.generateChordHoverDataBlock(
+                    d.target,
+                    d.source,
+                    label,
+                    displayValue
+                );
+            }
+            return partialToolTip;
+        };
+    }
+
+    formatHighlightToolTip(values) {
+        return d => {
+            let partialToolTip = '';
+            if (values) {
+                for (const key in d.values) {
+                    partialToolTip += this.generateHighlightHoverDataBlock(
+                        key,
+                        d.values[key]
+                    );
+                }
+            }
+            return partialToolTip;
+        };
+    }
+
     setToolTip(configApply) {
         /**
          * Set the tool tip event handler. It allows the user to specify what data they want
@@ -134,7 +197,7 @@ export default class Circos extends Component {
             } else if (
                 typeof configApply.tooltipContent.source !== 'undefined'
             ) {
-                var tooltipData = configApply.tooltipContent;
+                const tooltipData = configApply.tooltipContent;
 
                 if (
                     typeof tooltipData.sourceID !== 'undefined' &&
@@ -148,13 +211,6 @@ export default class Circos extends Component {
                             d[tooltipData.target][tooltipData.targetID] +
                             ': ' +
                             d[tooltipData.target][tooltipData.targetEnd] +
-                            '</h3>' +
-                            '<h3>' +
-                            d[tooltipData.target][tooltipData.targetID] +
-                            ' ➤ ' +
-                            d[tooltipData.source][tooltipData.sourceID] +
-                            ': ' +
-                            d[tooltipData.source][tooltipData.sourceEnd] +
                             '</h3>'
                         );
                     };
@@ -171,6 +227,20 @@ export default class Circos extends Component {
                         );
                     };
                 }
+            } else if (configApply.tooltipContent.chord === true) {
+                const tooltipData = configApply.tooltipContent;
+
+                configApply.tooltipContent = this.formatChordToolTip(
+                    tooltipData.bidirectional,
+                    tooltipData.label,
+                    tooltipData.displayValue
+                );
+            } else if (configApply.tooltipContent.highlight === true) {
+                const tooltipData = configApply.tooltipContent;
+
+                configApply.tooltipContent = this.formatHighlightToolTip(
+                    tooltipData.values
+                );
             }
         } else {
             configApply.tooltipContent = null;

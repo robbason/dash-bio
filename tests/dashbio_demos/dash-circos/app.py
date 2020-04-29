@@ -194,12 +194,15 @@ def get_circos_graph(
             config={
                 'innerRadius': size / 2 - 80,
                 'outerRadius': size / 2 - 40,
-                'ticks': {'display': False, 'labelDenominator': 1000000},
+                'ticks': {
+                    'display': True,
+                    'labelDenominator': 1000000,
+                    'labels': True
+                },
                 'labels': {
                     'position': 'center',
                     'display': True,
                     'size': 11,
-                    'color': '#fff',
                     'radialOffset': 75,
                 },
             },
@@ -223,16 +226,13 @@ def get_circos_graph(
                         'opacity': 0.7,
                         'color': {'name': 'color'},
                         'tooltipContent': {
-                            'source': 'source',
-                            'sourceID': 'id',
-                            'target': 'target',
-                            'targetID': 'id',
-                            'targetEnd': 'end',
-                            'sourceEnd': 'end',
-                            #'name': 'all'
+                            'chord': True,
+                            'bidirectional': True,
+                            'label': 'id',
+                            'displayValue': True
                         },
                     },
-                },
+                }
             ],
             size=700,
         ),
@@ -810,10 +810,10 @@ def get_circos_graph(
                                 'value': d['name'],
                                 'block_id': d['block_id'],
                             },
-                            filter(
-                                lambda d: d['block_id'] ==
-                                circos_graph_data['GRCh37'][0]['id'],
-                                circos_graph_data['cytobands'],
+                        filter(
+                            lambda d: d['block_id'] ==
+                            circos_graph_data['GRCh37'][0]['id'],
+                            circos_graph_data['cytobands'],
                             ),
                         )
                     ),
